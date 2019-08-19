@@ -12,3 +12,8 @@ Além das bibliotecas nativas do Android, a única biblioteca de terceiro usada 
 
 # PONTOS DE MELHORIA:
 A aplicação possui layout muito básico e poderia ficar mais legal se utilizasse posters na lista e nos detalhes dos filmes. Como a API da Trakt não fornece URL dos posters diretamente em seus modelos, como a API do OMBD por exemplo, essa feature fica para a versão 2.0 ;) 
+
+# PRÉVIA DA APLICAÇÃO:
+
+![alt text](https://i.imgur.com/DeACYHW.png)
+![alt text](https://i.imgur.com/yCdRkdL.png)
