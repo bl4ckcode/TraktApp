@@ -8,6 +8,7 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bl4ckcode.traktapp.R
@@ -19,6 +20,7 @@ import com.bl4ckcode.traktapp.presenter.MainPresenterDelegate
 
 class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListItemListener {
 
+    private var filtering: Boolean = false
     private var movies: List<Movie>? = mutableListOf()
     private var moviesFiltered: List<Movie>? = mutableListOf()
     private var page: Int = 0
@@ -38,11 +40,15 @@ class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListIt
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
+                val shouldDoPaging = movies?.count()?.rem(10)
 
-                if (linearLayoutManager!!.itemCount <= linearLayoutManager.findLastVisibleItemPosition() + 2) {
+                if ((shouldDoPaging == 0 && !filtering)
+                    && linearLayoutManager!!.itemCount <= linearLayoutManager.findLastVisibleItemPosition() + 2) {
                     page += 1
                     mPresenterDelegate.retrieveMoviesList(page)
                 }
+
+                filtering = false
             }
         })
 
@@ -62,6 +68,7 @@ class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListIt
                         movie -> movie.title.contains(query.toString(), true)
                 }
 
+                filtering = true
                 mRecycleViewAdapter.setMoviesFilteredList(moviesFiltered!!)
                 return true
             }
@@ -72,17 +79,19 @@ class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListIt
 
         })
 
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                mRecycleViewAdapter.setMoviesList(movies!!, true)
+        @Suppress("DEPRECATION")
+        MenuItemCompat.setOnActionExpandListener(mSearch, object : MenuItemCompat.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
             }
-        }
 
-        return super.onOptionsItemSelected(item)
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                mRecycleViewAdapter.setMoviesList(movies!!, true)
+                return true
+            }
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun setMoviesList(movies: List<Movie>?) {

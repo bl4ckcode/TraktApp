@@ -40,9 +40,10 @@ class MainListAdapter(private var movies: MutableList<Movie>,
     }
 
     fun setMoviesList(movies: List<Movie>, clear: Boolean) {
-        val startIndex = this.movies.count()
+        var startIndex = this.movies.count()
 
         if (clear) {
+            startIndex = 0
             this.movies.clear()
         }
 

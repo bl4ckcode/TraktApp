@@ -13,8 +13,8 @@ interface TraktService {
         "Content-type: application/json",
         "trakt-api-key: " + Constants.TraktClientID,
         "trakt-api-version: 2",
-        "X-Pagination-Limit: 20",
-        "X-Pagination-Page-Count: 20",
+        "X-Pagination-Limit: 100",
+        "X-Pagination-Page-Count: 100",
         "X-Pagination-Item-Count: 100"
     )
     @GET("movies/popular")

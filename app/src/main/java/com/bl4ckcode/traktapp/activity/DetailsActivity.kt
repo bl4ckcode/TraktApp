@@ -1,7 +1,6 @@
 package com.bl4ckcode.traktapp.activity
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
@@ -24,7 +23,9 @@ class DetailsActivity : AppCompatActivity(), DetailsPresenterDelegate {
         val mToolbar = findViewById<Toolbar>(R.id.toolbar)
         mToolbar.title = movie.title
         setSupportActionBar(mToolbar)
-        actionBar?.setDisplayShowHomeEnabled(true)
+
+        actionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         showLoading()
 
