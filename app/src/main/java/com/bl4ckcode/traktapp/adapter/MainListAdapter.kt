@@ -39,9 +39,19 @@ class MainListAdapter(private var movies: MutableList<Movie>,
         holder.itemView.setOnClickListener { adapterClickListener.clicked(movies[holder.adapterPosition]) }
     }
 
-    fun setMoviesList(movies: List<Movie>) {
+    fun setMoviesList(movies: List<Movie>, clear: Boolean) {
         val startIndex = this.movies.count()
+
+        if (clear) {
+            this.movies.clear()
+        }
+
         this.movies.addAll(movies)
         notifyItemRangeChanged(startIndex, this.movies.count())
+    }
+
+    fun setMoviesFilteredList(movies: List<Movie>) {
+        this.movies = movies.toMutableList()
+        notifyDataSetChanged()
     }
 }

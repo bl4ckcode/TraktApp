@@ -1,7 +1,7 @@
 package com.bl4ckcode.traktapp.interactor
 
 import com.bl4ckcode.traktapp.model.Movie
-import com.bl4ckcode.traktapp.router.TraktService
+import com.bl4ckcode.traktapp.service.TraktService
 import com.bl4ckcode.traktapp.util.Constants
 import retrofit2.Call
 import retrofit2.Callback

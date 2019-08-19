@@ -3,6 +3,8 @@ package com.bl4ckcode.traktapp.activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -22,7 +24,9 @@ class DetailsActivity : AppCompatActivity(), DetailsPresenterDelegate {
         val mToolbar = findViewById<Toolbar>(R.id.toolbar)
         mToolbar.title = movie.title
         setSupportActionBar(mToolbar)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setDisplayShowHomeEnabled(true)
+
+        showLoading()
 
         val mPresenterDelegate = DetailsPresenter(this)
         mPresenterDelegate.retrieveMovieDetails(movie)
@@ -43,6 +47,8 @@ class DetailsActivity : AppCompatActivity(), DetailsPresenterDelegate {
     }
 
     override fun setMovieDetails(movie: Movie?) {
+        hideLoading()
+
         val mTxtViewTagline = findViewById<TextView>(R.id.txtView_tagline_desc)
         val mTxtViewOverview = findViewById<TextView>(R.id.txtView_overview_desc)
         val mTxtViewReleased = findViewById<TextView>(R.id.txtView_released_desc)
@@ -50,5 +56,15 @@ class DetailsActivity : AppCompatActivity(), DetailsPresenterDelegate {
         mTxtViewTagline.text = movie?.tagline
         mTxtViewOverview.text = movie?.overview
         mTxtViewReleased.text = movie?.released
+    }
+
+    fun showLoading() {
+        val loading = findViewById<ProgressBar>(R.id.loading)
+        loading.visibility = View.VISIBLE
+    }
+
+    fun hideLoading() {
+        val loading = findViewById<ProgressBar>(R.id.loading)
+        loading.visibility = View.GONE
     }
 }

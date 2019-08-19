@@ -2,6 +2,9 @@ package com.bl4ckcode.traktapp.activity
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -16,6 +19,8 @@ import com.bl4ckcode.traktapp.presenter.MainPresenterDelegate
 
 class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListItemListener {
 
+    private var movies: List<Movie>? = mutableListOf()
+    private var moviesFiltered: List<Movie>? = mutableListOf()
     private var page: Int = 0
     private val mPresenterDelegate = MainPresenter(this)
     private val mRecycleViewAdapter = MainListAdapter(mutableListOf(), this, this)
@@ -41,6 +46,7 @@ class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListIt
             }
         })
 
+        showLoading()
         mPresenterDelegate.retrieveMoviesList(page)
     }
 
@@ -52,7 +58,12 @@ class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListIt
 
         mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                moviesFiltered = movies?.filter {
+                        movie -> movie.title.contains(query.toString(), true)
+                }
+
+                mRecycleViewAdapter.setMoviesFilteredList(moviesFiltered!!)
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -64,9 +75,22 @@ class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListIt
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                mRecycleViewAdapter.setMoviesList(movies!!, true)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun setMoviesList(movies: List<Movie>?) {
+        hideLoading()
+
         if (movies != null) {
-            mRecycleViewAdapter.setMoviesList(movies)
+            this.movies = movies
+            mRecycleViewAdapter.setMoviesList(movies, false)
         } else {
 
         }
@@ -74,5 +98,15 @@ class MainActivity : AppCompatActivity(), MainPresenterDelegate, OnAdapterListIt
 
     override fun clicked(movie: Movie) {
         mPresenterDelegate.goToDetailsActivity(this, movie)
+    }
+
+    fun showLoading() {
+        val loading = findViewById<ProgressBar>(R.id.loading)
+        loading.visibility = View.VISIBLE
+    }
+
+    fun hideLoading() {
+        val loading = findViewById<ProgressBar>(R.id.loading)
+        loading.visibility = View.GONE
     }
 }
